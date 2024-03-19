@@ -1,0 +1,55 @@
+# get a turn to roll the dice, getting a number from 1-6
+# anything but 1, you add that to the score of your turn
+# can decide how many times to roll the dice
+# if you get a 1, you go down to 0
+# max score is 50
+
+import random
+def roll(): # function that simulates a rolling dice and picks a random number between 1-6
+    min_value = 1
+    max_value = 6
+    roll = random.randint(min_value, max_value)
+    return roll
+
+value = roll()
+print(value)
+
+while True:
+    players = input("Enter the number of players (2-4): ")
+    if players.isdigit():
+        players = int(players)
+        if 2 <= players <= 4:
+            break
+        else:
+            print("Must be between 2-4 players")
+    else:
+        print("Enter a valid number")
+
+max_score = 50
+players_scores = [0 for _ in range(players)] # contains the individual scores of the players; list comprehension (puts 0 in list for every player)
+
+while max(players_scores) < max_score: # ensuring that none of the players have hit 50
+    for players_idx in range(players): # simulates one persons entire turn; players_idx is index of current player
+        print("\nPlayer", players_idx + 1, "turn has just started\n") # add 1 because the first index is 0
+        print("Your total score is;",players_scores[players_idx])
+        current_score = 0
+        while True: # keeps running till the player doesn't want to play
+            should_roll = input("Would you like to roll (y)? ")
+            if should_roll.lower() != "y":
+                break
+            value = roll()
+            if value == 1:
+                print("You rolled a 1. Your turn is over.")
+                current_score = 0
+                break
+            else:
+                current_score += value
+                print("You rolled a ", value)
+            print("Your score is: ", current_score)
+
+        players_scores[players_idx] += current_score # score of player whose turn it is plus their current score
+        print("Your total score is:", players_scores[players_idx])
+
+max_score = max(players_scores)
+player_winning_idx = players_scores.index(max_score)
+print("Player", player_winning_idx + 1, "is the winnner")
